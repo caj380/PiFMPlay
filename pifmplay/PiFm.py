@@ -4,5 +4,5 @@ from subprocess import call
 
 
 def play_sound( filename ):
-   call(["./pifm", filename])
+   call(["./fm_transmitter", filename])
    return

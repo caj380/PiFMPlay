@@ -46,7 +46,7 @@ resume() {
 }
 next() {
 	# kills pifm, and that makes pifmplay continue to the next item in list (if there is any)
-	pkill pifm
+	pkill fm_transmitter
 }
 stop() {
 	# slaughers pifmplay (and everything that goes with it)
@@ -77,7 +77,7 @@ playstream() {
   echo "DEBUG: playstream"
   #plays a stream from the internet
   #plays a bbc stream by default, since idk about any online music/sound streams. definately room for improvement here if needed ;)
-  sox -v .9 -t mp3 http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmplayfolder/pifm - $2
+  sox -v .9 -t mp3 http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmplayfolder/fm_transmitter -f $2 -
 }
 
 playpipe() {
@@ -85,19 +85,19 @@ playpipe() {
   #plays a stream supplied by pipe
   #over ssh: e.g. cat <audio file> | ssh pi@raspberrypi 'cat - | /home/pi/PiFMPlay/pifmplay/pifmplay PIPE 91.3'
   #or locally: cat /path/to/file | /home/pi/PiFMPlay/pifmplay/pifmplay PIPE 91.3
-  cat /dev/stdin | ffmpeg -i pipe:0 -f s16le -ar 22.05k -ac 1 - | sudo $pifmplayfolder/pifm - $2
+  cat /dev/stdin | ffmpeg -i pipe:0 -f s16le -ar 22.05k -ac 1 - | sudo $pifmplayfolder/fm_transmitter -f $2 -
 }
 
 playmp3ffmpeg() {
   echo "DEBUG: playmp3ffmpeg"
   # ffmpeg converts the mp3 file to a wav stream, that stream is piped to pifm, pifm then transmits it over fm-radio via gpio 4
-  ffmpeg -i "$1" -f s16le -ar 22.05k -ac 1 - | sudo $pifmplayfolder/pifm - $2
+  ffmpeg -i "$1" -f s16le -ar 22.05k -ac 1 - | sudo $pifmplayfolder/fm_transmitter -f $2 -
 }
 
 playmp3sox() {
   echo "DEBUG: playmp3sox"
   # sox converts the mp3 file to a wav stream, that stream is piped to pifm, pifm then transmits it over fm-radio via gpio 4
-  sox -v .9 -t mp3 "$1" -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmplayfolder/pifm - $2
+  sox -v .9 -t mp3 "$1" -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmplayfolder/fm_transmitter -f $2 -
 }
 playyoutube() {
 	echo "DEBUG: playyoutube"
